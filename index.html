@@ -1008,6 +1008,9 @@ td{
     <div>
       <h1>Distribuidores</h1>
       <p>Gestión comercial y Trade Marketing</p>
+      <button class="primary-btn" onclick="newDistributor()">
+  + Nuevo distribuidor
+</button>
     </div>
   </div>
 
@@ -1680,7 +1683,238 @@ function renderActivities(){
   });
 }
 
-</script>
+function newDistributor(){
+
+  const overlay = document.createElement("div");
+
+  overlay.style.cssText = `
+    position:fixed;
+    inset:0;
+    background:rgba(15,24,33,.55);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    padding:20px;
+  `;
+
+  overlay.innerHTML = `
+    <div style="
+      background:#fff;
+      width:min(760px,100%);
+      max-height:90vh;
+      overflow:auto;
+      border-radius:16px;
+      padding:28px;
+      box-shadow:0 20px 60px rgba(0,0,0,.25);
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+    ">
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:24px;
+      ">
+        <div>
+          <h2 style="margin:0;color:#0F1821;">Nuevo distribuidor</h2>
+          <p style="margin:6px 0 0;color:#6B7280;">
+            Registrar información comercial del distribuidor
+          </p>
+        </div>
+
+        <button id="closeDistributor"
+          style="
+            border:0;
+            background:#F4F5F7;
+            border-radius:8px;
+            width:36px;
+            height:36px;
+            cursor:pointer;
+            font-size:20px;
+          ">
+          ×
+        </button>
+      </div>
+
+      <div style="
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:16px;
+      ">
+
+        <div>
+          <label>Nombre del distribuidor *</label>
+          <input id="distName" type="text"
+            placeholder="Ej. Empaquetaduras y Empaques"
+            style="width:100%;padding:12px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;">
+        </div>
+
+        <div>
+          <label>País *</label>
+          <select id="distCountry"
+            style="width:100%;padding:12px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;">
+            <option value="">Seleccionar</option>
+            <option>Colombia</option>
+            <option>Nicaragua</option>
+            <option>Costa Rica</option>
+            <option>República Dominicana</option>
+            <option>Panamá</option>
+            <option>Guatemala</option>
+            <option>El Salvador</option>
+            <option>Honduras</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Tipo de distribuidor</label>
+          <select id="distType"
+            style="width:100%;padding:12px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;">
+            <option value="">Seleccionar</option>
+            <option>A</option>
+            <option>B</option>
+            <option>C</option>
+          </select>
+        </div>
+
+        <div>
+          <label>% Fondo de Marketing</label>
+          <input id="distFund" type="number" value="1" step="0.01"
+            style="width:100%;padding:12px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;">
+        </div>
+
+        <div>
+          <label>Compra mensual</label>
+          <input id="distMonthlyPurchase" type="number"
+            placeholder="0"
+            style="width:100%;padding:12px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;">
+        </div>
+
+        <div>
+          <label>Compra acumulada anual</label>
+          <input id="distAnnualPurchase" type="number"
+            placeholder="0"
+            style="width:100%;padding:12px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;">
+        </div>
+
+      </div>
+
+      <div style="margin-top:18px;">
+        <label>Motivo estratégico</label>
+
+        <div style="
+          display:grid;
+          grid-template-columns:1fr 1fr;
+          gap:8px;
+          margin-top:8px;
+        ">
+          <label><input type="checkbox" value="Alto volumen de compra" class="distReason"> Alto volumen de compra</label>
+          <label><input type="checkbox" value="Estratégico" class="distReason"> Estratégico</label>
+          <label><input type="checkbox" value="Potencial de crecimiento" class="distReason"> Potencial de crecimiento</label>
+          <label><input type="checkbox" value="Potencializar producto/línea" class="distReason"> Potencializar producto/línea</label>
+          <label><input type="checkbox" value="Otro" class="distReason"> Otro</label>
+        </div>
+      </div>
+
+      <div style="margin-top:18px;">
+        <label>Productos / negocios a impulsar</label>
+
+        <textarea id="distProducts"
+          placeholder="Ej. Protección respiratoria, ocular, casco Tipo 2..."
+          style="
+            width:100%;
+            min-height:90px;
+            padding:12px;
+            margin-top:6px;
+            border:1px solid #E5E7EB;
+            border-radius:8px;
+            resize:vertical;
+          "></textarea>
+      </div>
+
+      <div style="
+        display:flex;
+        justify-content:flex-end;
+        gap:10px;
+        margin-top:24px;
+      ">
+
+        <button id="cancelDistributor"
+          style="
+            padding:12px 18px;
+            border:1px solid #E5E7EB;
+            background:#fff;
+            border-radius:8px;
+            cursor:pointer;
+          ">
+          Cancelar
+        </button>
+
+        <button id="saveDistributor"
+          style="
+            padding:12px 20px;
+            border:0;
+            background:#E5004E;
+            color:#fff;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight:600;
+          ">
+          Guardar distribuidor
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  document.getElementById("closeDistributor").onclick = () => overlay.remove();
+  document.getElementById("cancelDistributor").onclick = () => overlay.remove();
+
+  document.getElementById("saveDistributor").onclick = function(){
+
+    const name = document.getElementById("distName").value.trim();
+    const country = document.getElementById("distCountry").value;
+
+    if(!name || !country){
+      alert("Completa los campos obligatorios: Nombre del distribuidor y País.");
+      return;
+    }
+
+    const reasons = [...document.querySelectorAll(".distReason:checked")]
+      .map(item => item.value);
+
+    const distributor = {
+      id: "DIST-" + Date.now(),
+      name: name,
+      country: country,
+      type: document.getElementById("distType").value || "Sin información",
+      fundPercent: document.getElementById("distFund").value || "1",
+      monthlyPurchase: document.getElementById("distMonthlyPurchase").value || "",
+      annualPurchase: document.getElementById("distAnnualPurchase").value || "",
+      reasons: reasons,
+      products: document.getElementById("distProducts").value || "",
+      createdAt: new Date().toISOString()
+    };
+
+    const distributors = JSON.parse(
+      localStorage.getItem("marketing360_distributors") || "[]"
+    );
+
+    distributors.push(distributor);
+
+    localStorage.setItem(
+      "marketing360_distributors",
+      JSON.stringify(distributors)
+    );
+
+    alert("Distribuidor guardado correctamente.");
+
+    overlay.remove();
+  };
+}</script>
 
 </body>
 </html>
