@@ -1603,34 +1603,60 @@ function newActivity(){
 
   document.getElementById("saveActivity").onclick = function(){
 
-    const name = document.getElementById("actName").value.trim();
-    const type = document.getElementById("actType").value;
-    const country = document.getElementById("actCountry").value;
+  const nombre = document.getElementById("actName").value.trim();
+  const tipo = document.getElementById("actType").value;
+  const pais = document.getElementById("actCountry").value;
 
-    if(!name || !type || !country){
-      alert("Completa los campos obligatorios: Actividad, Tipo y País.");
-      return;
-    }
+  if(!nombre || !tipo || !pais){
+    alert("Completa los campos obligatorios: Actividad, Tipo y País.");
+    return;
+  }
 
-    const activity = {
-      id:"ACT-" + Date.now(),
-      name:name,
-      type:type,
-      country:country,
-      distributor:document.getElementById("actDistributor").value || "Sin información",
-      responsible:document.getElementById("actResponsible").value || "Sin información",
-      status:document.getElementById("actStatus").value,
-      start:document.getElementById("actStart").value || "",
-      date:document.getElementById("actDate").value || "",
-      end:document.getElementById("actEnd").value || "",
-      budget:document.getElementById("actBudget").value || "",
-      objective:document.getElementById("actObjective").value || "Sin información",
-      description:document.getElementById("actDescription").value || "Sin información",
-      createdAt:new Date().toISOString()
-    };
+  const activity = {
+    id: "ACT-" + Date.now(),
+    name: nombre,
+    type: tipo,
+    country: pais,
+    distributor: document.getElementById("actDistributor").value || "",
+    responsible: document.getElementById("actResponsible").value || "",
+    status: document.getElementById("actStatus").value,
+    start: document.getElementById("actStart").value || "",
+    date: document.getElementById("actDate").value || "",
+    end: document.getElementById("actEnd").value || "",
+    budget: document.getElementById("actBudget").value || "",
+    objective: document.getElementById("actObjective").value || "",
+    description: document.getElementById("actDescription").value || ""
+  };
 
-    const activities =
-      JSON.parse(localStorage.getItem("marketing360_activities") || "[]");
+  const API_URL = "https://script.google.com/macros/s/AKfycbxNLQDpA-2RIkWdHKXK5B2C8y4Q7NQaJ1n_-MKSLFWKzoanRYM_Dx9muy6s1Bm2r8qIcA/exec";
+
+  fetch(API_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify({
+      action: "crear_actividad",
+      name: activity.name,
+      type: activity.type,
+      country: activity.country,
+      distributor: activity.distributor,
+      responsible: activity.responsible,
+      start: activity.start,
+      date: activity.date,
+      end: activity.end,
+      status: activity.status,
+      budget: activity.budget,
+      objective: activity.objective,
+      description: activity.description
+    })
+  })
+  .then(function(){
+
+    const activities = JSON.parse(
+      localStorage.getItem("marketing360_activities") || "[]"
+    );
 
     activities.push(activity);
 
@@ -1644,8 +1670,16 @@ function newActivity(){
     closeForm();
 
     renderActivities();
-  };
-}
+
+  })
+  .catch(function(error){
+
+    console.error(error);
+    alert("No se pudo guardar la actividad. Revisa la conexión.");
+
+  });
+
+};
 
 
 function renderActivities(){
