@@ -1385,7 +1385,299 @@ function showModule(moduleId, button){
 }
 
 function newActivity(){
-  alert("Aquí construiremos el formulario completo para registrar una nueva actividad.");
+
+  const overlay = document.createElement("div");
+
+  overlay.style.cssText = `
+    position:fixed;
+    inset:0;
+    background:rgba(15,24,33,.55);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    padding:20px;
+  `;
+
+  overlay.innerHTML = `
+    <div style="
+      background:white;
+      width:min(760px,100%);
+      max-height:90vh;
+      overflow:auto;
+      border-radius:16px;
+      padding:28px;
+      box-shadow:0 20px 60px rgba(0,0,0,.25);
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+    ">
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:22px;
+      ">
+
+        <div>
+          <h2 style="margin:0;color:#0F1821;">
+            Nueva actividad
+          </h2>
+
+          <p style="
+            margin:6px 0 0;
+            color:#6B7280;
+            font-size:13px;
+          ">
+            Registra una actividad de Marketing 360
+          </p>
+        </div>
+
+        <button id="closeActivity"
+          style="
+            border:0;
+            background:#F4F5F7;
+            width:36px;
+            height:36px;
+            border-radius:50%;
+            font-size:20px;
+            cursor:pointer;
+          ">
+          ×
+        </button>
+
+      </div>
+
+      <div style="
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:16px;
+      ">
+
+        <div>
+          <label>Actividad *</label>
+          <input id="actName" placeholder="Ej. Webinar L-340 Ultra Clean"
+            style="width:100%;padding:11px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;">
+        </div>
+
+        <div>
+          <label>Tipo *</label>
+          <select id="actType"
+            style="width:100%;padding:11px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;">
+            <option value="">Seleccionar</option>
+            <option>Eventos</option>
+            <option>Campañas</option>
+            <option>Trade Marketing</option>
+            <option>Lanzamientos</option>
+            <option>Webinars</option>
+            <option>Digital</option>
+          </select>
+        </div>
+
+        <div>
+          <label>País *</label>
+          <select id="actCountry"
+            style="width:100%;padding:11px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;">
+            <option value="">Seleccionar</option>
+            <option>Colombia</option>
+            <option>Nicaragua</option>
+            <option>Costa Rica</option>
+            <option>República Dominicana</option>
+            <option>Panamá</option>
+            <option>Guatemala</option>
+            <option>El Salvador</option>
+            <option>Honduras</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Distribuidor</label>
+          <input id="actDistributor"
+            placeholder="Opcional"
+            style="width:100%;padding:11px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;">
+        </div>
+
+        <div>
+          <label>Responsable</label>
+          <input id="actResponsible"
+            value="María Fernanda"
+            style="width:100%;padding:11px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;">
+        </div>
+
+        <div>
+          <label>Estado</label>
+          <select id="actStatus"
+            style="width:100%;padding:11px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;">
+            <option>Planificado</option>
+            <option>En preparación</option>
+            <option>En ejecución</option>
+            <option>Completado</option>
+            <option>Atrasado</option>
+            <option>Cancelado</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Fecha de inicio</label>
+          <input id="actStart" type="date"
+            style="width:100%;padding:11px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;">
+        </div>
+
+        <div>
+          <label>Fecha de actividad</label>
+          <input id="actDate" type="date"
+            style="width:100%;padding:11px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;">
+        </div>
+
+        <div>
+          <label>Fecha final</label>
+          <input id="actEnd" type="date"
+            style="width:100%;padding:11px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;">
+        </div>
+
+        <div>
+          <label>Presupuesto</label>
+          <input id="actBudget" type="number" placeholder="0"
+            style="width:100%;padding:11px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;">
+        </div>
+
+        <div style="grid-column:1/-1;">
+          <label>Objetivo</label>
+          <textarea id="actObjective"
+            placeholder="¿Qué queremos lograr con esta actividad?"
+            style="width:100%;height:80px;padding:11px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;resize:vertical;"></textarea>
+        </div>
+
+        <div style="grid-column:1/-1;">
+          <label>Descripción</label>
+          <textarea id="actDescription"
+            placeholder="Información adicional..."
+            style="width:100%;height:80px;padding:11px;margin-top:6px;border:1px solid #E5E7EB;border-radius:8px;resize:vertical;"></textarea>
+        </div>
+
+      </div>
+
+      <div style="
+        display:flex;
+        justify-content:flex-end;
+        gap:10px;
+        margin-top:24px;
+      ">
+
+        <button id="cancelActivity"
+          style="
+            padding:11px 18px;
+            border:1px solid #E5E7EB;
+            background:white;
+            border-radius:8px;
+            cursor:pointer;
+          ">
+          Cancelar
+        </button>
+
+        <button id="saveActivity"
+          style="
+            padding:11px 20px;
+            border:0;
+            background:#E5004E;
+            color:white;
+            border-radius:8px;
+            font-weight:600;
+            cursor:pointer;
+          ">
+          Guardar actividad
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  function closeForm(){
+    overlay.remove();
+  }
+
+  document.getElementById("closeActivity").onclick = closeForm;
+  document.getElementById("cancelActivity").onclick = closeForm;
+
+  document.getElementById("saveActivity").onclick = function(){
+
+    const name = document.getElementById("actName").value.trim();
+    const type = document.getElementById("actType").value;
+    const country = document.getElementById("actCountry").value;
+
+    if(!name || !type || !country){
+      alert("Completa los campos obligatorios: Actividad, Tipo y País.");
+      return;
+    }
+
+    const activity = {
+      id:"ACT-" + Date.now(),
+      name:name,
+      type:type,
+      country:country,
+      distributor:document.getElementById("actDistributor").value || "Sin información",
+      responsible:document.getElementById("actResponsible").value || "Sin información",
+      status:document.getElementById("actStatus").value,
+      start:document.getElementById("actStart").value || "",
+      date:document.getElementById("actDate").value || "",
+      end:document.getElementById("actEnd").value || "",
+      budget:document.getElementById("actBudget").value || "",
+      objective:document.getElementById("actObjective").value || "Sin información",
+      description:document.getElementById("actDescription").value || "Sin información",
+      createdAt:new Date().toISOString()
+    };
+
+    const activities =
+      JSON.parse(localStorage.getItem("marketing360_activities") || "[]");
+
+    activities.push(activity);
+
+    localStorage.setItem(
+      "marketing360_activities",
+      JSON.stringify(activities)
+    );
+
+    alert("Actividad guardada correctamente.");
+
+    closeForm();
+
+    renderActivities();
+  };
+}
+
+
+function renderActivities(){
+
+  const activities =
+    JSON.parse(localStorage.getItem("marketing360_activities") || "[]");
+
+  const tbody = document.querySelector("#actividades table tbody");
+
+  if(!tbody || activities.length === 0) return;
+
+  activities.forEach(function(activity){
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td><strong>${activity.name}</strong></td>
+      <td>${activity.type}</td>
+      <td>${activity.country}</td>
+      <td>${activity.date || "Sin información"}</td>
+      <td>${activity.distributor}</td>
+      <td>
+        <span class="status blue">
+          ${activity.status}
+        </span>
+      </td>
+      <td>0%</td>
+    `;
+
+    tbody.appendChild(row);
+
+  });
 }
 
 </script>
