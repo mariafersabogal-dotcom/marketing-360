@@ -1032,7 +1032,7 @@ td{
 
       <tbody>
 
-        <tr>
+       <tr onclick="showCountryDistributors('Colombia')" style="cursor:pointer;">
           <td><strong>🇨🇴 Colombia</strong></td>
           <td>2</td>
           <td>$420M</td>
@@ -1954,6 +1954,145 @@ renderDistributors();
     }
 
   });
+}
+  function showCountryDistributors(country){
+
+  const distributors = JSON.parse(
+    localStorage.getItem("marketing360_distributors") || "[]"
+  );
+
+  const filtered = distributors.filter(function(distributor){
+    return distributor.country === country;
+  });
+
+  const overlay = document.createElement("div");
+
+  overlay.style.cssText = `
+    position:fixed;
+    inset:0;
+    background:rgba(15,24,33,.55);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    padding:20px;
+  `;
+
+  let rows = "";
+
+  if(filtered.length === 0){
+
+    rows = `
+      <div style="padding:30px;text-align:center;color:#6B7280;">
+        No hay distribuidores registrados en ${country}.
+      </div>
+    `;
+
+  } else {
+
+    rows = filtered.map(function(distributor){
+
+      return `
+        <div style="
+          border:1px solid #E5E7EB;
+          border-radius:12px;
+          padding:18px;
+          margin-bottom:12px;
+          background:#fff;
+        ">
+          <div style="
+            font-size:18px;
+            font-weight:700;
+            color:#0F1821;
+            margin-bottom:8px;
+          ">
+            ${distributor.name}
+          </div>
+
+          <div style="color:#6B7280;font-size:14px;">
+            Tipo: ${distributor.type || "Sin información"}
+          </div>
+
+          <div style="color:#6B7280;font-size:14px;">
+            Compra mensual: ${distributor.monthlyPurchase || "Sin información"}
+          </div>
+
+          <div style="color:#6B7280;font-size:14px;">
+            Compra anual: ${distributor.annualPurchase || "Sin información"}
+          </div>
+
+          <div style="color:#6B7280;font-size:14px;">
+            Fondo 1%: ${distributor.fundPercent || "1"}%
+          </div>
+
+          <div style="color:#6B7280;font-size:14px;">
+            Productos: ${distributor.products || "Sin información"}
+          </div>
+        </div>
+      `;
+
+    }).join("");
+
+  }
+
+  overlay.innerHTML = `
+    <div style="
+      background:white;
+      width:min(700px,100%);
+      max-height:85vh;
+      overflow:auto;
+      border-radius:16px;
+      padding:28px;
+      box-shadow:0 20px 60px rgba(0,0,0,.25);
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+    ">
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:22px;
+      ">
+
+        <div>
+          <h2 style="
+            margin:0;
+            color:#0F1821;
+          ">
+            Distribuidores de ${country}
+          </h2>
+
+          <p style="
+            margin:6px 0 0;
+            color:#6B7280;
+          ">
+            ${filtered.length} distribuidor${filtered.length === 1 ? "" : "es"} registrado${filtered.length === 1 ? "" : "s"}
+          </p>
+        </div>
+
+        <button
+          onclick="this.closest('div[style*=&quot;position:fixed&quot;]').remove()"
+          style="
+            border:0;
+            background:#F4F5F7;
+            width:36px;
+            height:36px;
+            border-radius:50%;
+            font-size:20px;
+            cursor:pointer;
+          "
+        >
+          ×
+        </button>
+
+      </div>
+
+      ${rows}
+
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
 }
 }</script>
 
