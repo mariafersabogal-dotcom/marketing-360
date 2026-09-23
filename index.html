@@ -2094,7 +2094,9 @@ alert("Colombia seleccionada");
 
   document.body.appendChild(overlay);
 }
-  window.showCountryDistributors = showCountryDistributors;
+  window.showCountryDistributors = function(country){
+  alert("FUNCION OK: " + country);
+};
 }</script>
 
 </body>
