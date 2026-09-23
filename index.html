@@ -1911,9 +1911,49 @@ function newDistributor(){
     );
 
     alert("Distribuidor guardado correctamente.");
-
+renderDistributors();
     overlay.remove();
   };
+  function renderDistributors(){
+
+  const distributors = JSON.parse(
+    localStorage.getItem("marketing360_distributors") || "[]"
+  );
+
+  const counts = {};
+
+  distributors.forEach(function(distributor){
+    const country = distributor.country || "Sin información";
+
+    counts[country] = (counts[country] || 0) + 1;
+  });
+
+  const rows = document.querySelectorAll("#distribuidores table tbody tr");
+
+  rows.forEach(function(row){
+
+    const countryCell = row.querySelector("td");
+
+    if(!countryCell) return;
+
+    const countryText = countryCell.textContent.trim();
+
+    let country = "";
+
+    if(countryText.includes("Colombia")) country = "Colombia";
+    if(countryText.includes("Guatemala")) country = "Guatemala";
+    if(countryText.includes("Costa Rica")) country = "Costa Rica";
+
+    if(country){
+      const cells = row.querySelectorAll("td");
+
+      if(cells[1]){
+        cells[1].textContent = counts[country] || 0;
+      }
+    }
+
+  });
+}
 }</script>
 
 </body>
