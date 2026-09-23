@@ -1032,7 +1032,7 @@ td{
 
       <tbody>
 
-      <tr onclick="alert(typeof window.showCountryDistributors)" style="cursor:pointer;">
+      <tr onclick="alert(JSON.parse(localStorage.getItem('marketing360_distributors') || '[]').filter(d => d.country === 'Colombia').map(d => d.name).join('\n') || 'No hay distribuidores registrados')" style="cursor:pointer;">
           <td><strong>🇨🇴 Colombia</strong></td>
           <td>2</td>
           <td>$420M</td>
