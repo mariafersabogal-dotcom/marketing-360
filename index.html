@@ -1032,7 +1032,7 @@ td{
 
       <tbody>
 
-      <tr onclick="alert(JSON.parse(localStorage.getItem('marketing360_distributors') || '[]').filter(d => d.country === 'Colombia').map(d => d.name).join('\n') || 'No hay distribuidores registrados')" style="cursor:pointer;">
+      <tr onclick="showDistributorsModal('Colombia')" style="cursor:pointer;">
           <td><strong>🇨🇴 Colombia</strong></td>
           <td>2</td>
           <td>$420M</td>
@@ -2096,6 +2096,125 @@ alert("Colombia seleccionada");
 }
 window.showCountryDistributors = function(country){
   alert("FUNCION OK: " + country);
+};
+window.showDistributorsModal = function(country){
+
+  const distributors = JSON.parse(
+    localStorage.getItem("marketing360_distributors") || "[]"
+  );
+
+  const filtered = distributors.filter(function(d){
+    return d.country === country;
+  });
+
+  const overlay = document.createElement("div");
+
+  overlay.style.cssText = `
+    position:fixed;
+    inset:0;
+    background:rgba(15,24,33,.55);
+    z-index:9999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  `;
+
+  let cards = "";
+
+  filtered.forEach(function(d){
+
+    cards += `
+      <div style="
+        border:1px solid #E5E7EB;
+        border-radius:12px;
+        padding:18px;
+        margin-bottom:12px;
+        background:#fff;
+      ">
+
+        <h3 style="
+          margin:0 0 12px;
+          color:#0F1821;
+        ">
+          ${d.name}
+        </h3>
+
+        <div style="color:#6B7280;margin-bottom:5px;">
+          <strong>Tipo:</strong> ${d.type || "Sin información"}
+        </div>
+
+        <div style="color:#6B7280;margin-bottom:5px;">
+          <strong>Compra mensual:</strong> ${d.monthlyPurchase || "Sin información"}
+        </div>
+
+        <div style="color:#6B7280;margin-bottom:5px;">
+          <strong>Compra anual:</strong> ${d.annualPurchase || "Sin información"}
+        </div>
+
+        <div style="color:#6B7280;margin-bottom:5px;">
+          <strong>Fondo:</strong> ${d.fundPercent || "1"}%
+        </div>
+
+        <div style="color:#6B7280;">
+          <strong>Productos:</strong> ${d.products || "Sin información"}
+        </div>
+
+      </div>
+    `;
+
+  });
+
+  overlay.innerHTML = `
+    <div style="
+      background:white;
+      width:min(700px,100%);
+      max-height:85vh;
+      overflow:auto;
+      border-radius:16px;
+      padding:28px;
+    ">
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:20px;
+      ">
+
+        <div>
+          <h2 style="margin:0;color:#0F1821;">
+            Distribuidores de ${country}
+          </h2>
+
+          <p style="margin:6px 0;color:#6B7280;">
+            ${filtered.length} distribuidor${filtered.length === 1 ? "" : "es"} registrado${filtered.length === 1 ? "" : "s"}
+          </p>
+        </div>
+
+        <button
+          onclick="this.closest('.marketing-distributor-modal').remove()"
+          style="
+            border:0;
+            background:#F3F4F6;
+            width:36px;
+            height:36px;
+            border-radius:50%;
+            font-size:20px;
+            cursor:pointer;
+          "
+        >×</button>
+
+      </div>
+
+      ${cards || '<p style="color:#6B7280;">No hay distribuidores registrados.</p>'}
+
+    </div>
+  `;
+
+  overlay.className = "marketing-distributor-modal";
+
+  document.body.appendChild(overlay);
 };
 }</script>
 
