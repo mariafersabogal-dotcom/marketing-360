@@ -1265,10 +1265,22 @@ tr:last-child td{
 
       <section id="presupuesto" class="section">
 
-        <div class="section-heading">
-          <h1>Presupuesto</h1>
-          <p>¿En qué estamos gastando?</p>
-        </div>
+       <div class="section-heading" style="display:flex;justify-content:space-between;align-items:flex-end;gap:20px;">
+
+  <div>
+    <h1>Presupuesto</h1>
+    <p>En qué estamos gastando?</p>
+  </div>
+
+  <button
+    class="btn btn-primary"
+    type="button"
+    onclick="openModal('gastoModal')"
+  >
+    + Registrar gasto
+  </button>
+
+</div>
 
 
         <div class="kpis">
@@ -1335,164 +1347,7 @@ tr:last-child td{
 
         </div>
         
-<!-- FORMULARIO DE GASTOS -->
-<div class="panel" style="margin-top:24px;">
 
-  <div class="panel-header">
-    <div>
-      <h3>Registrar gasto</h3>
-      <p>Registra la inversión ejecutada y su fuente de financiación.</p>
-    </div>
-  </div>
-
-  <div class="panel-body">
-
-    <div class="form-grid">
-
-      <div class="form-group">
-        <label>Fecha</label>
-        <input type="date" id="gastoFecha">
-      </div>
-
-      <div class="form-group">
-        <label>País</label>
-        <select id="gastoPais">
-          <option value="">Seleccionar país</option>
-          <option value="Colombia">Colombia</option>
-          <option value="Guatemala">Guatemala</option>
-          <option value="Costa Rica">Costa Rica</option>
-          <option value="Nicaragua">Nicaragua</option>
-          <option value="Panamá">Panamá</option>
-          <option value="República Dominicana">República Dominicana</option>
-          <option value="Honduras">Honduras</option>
-          <option value="El Salvador">El Salvador</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Rubro</label>
-        <select id="gastoRubro">
-          <option value="">Seleccionar rubro</option>
-          <option value="Pauta digital y branding">Pauta digital y branding</option>
-          <option value="Contenido y fotografía">Contenido y fotografía</option>
-          <option value="Adhesiones institucionales">Adhesiones institucionales</option>
-          <option value="Ferias y eventos">Ferias y eventos</option>
-          <option value="Material POP">Material POP</option>
-          <option value="Brandeos">Brandeos</option>
-          <option value="Merchandising y exhibiciones">Merchandising y exhibiciones</option>
-          <option value="Publicidad tradicional / PR">Publicidad tradicional / PR</option>
-          <option value="Herramientas comerciales">Herramientas comerciales</option>
-          <option value="Trade Marketing">Trade Marketing</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Actividad</label>
-        <select id="gastoActividad">
-          <option value="">Seleccionar actividad</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Distribuidor</label>
-        <select id="gastoDistribuidor">
-          <option value="">Seleccionar distribuidor</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Descripción</label>
-        <input
-          type="text"
-          id="gastoDescripcion"
-          placeholder="Describe el gasto"
-        >
-      </div>
-
-      <div class="form-group">
-        <label>Valor</label>
-        <input
-          type="number"
-          id="gastoValor"
-          min="0"
-          step="0.01"
-          placeholder="0"
-        >
-      </div>
-
-      <div class="form-group">
-        <label>Moneda</label>
-        <select id="gastoMoneda">
-          <option value="COP">COP</option>
-          <option value="GTQ">GTQ</option>
-          <option value="CRC">CRC</option>
-          <option value="NIO">NIO</option>
-          <option value="DOP">DOP</option>
-          <option value="PAB">PAB</option>
-          <option value="HNL">HNL</option>
-          <option value="USD">USD</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Estado</label>
-        <select id="gastoEstado">
-          <option value="EJECUTADO">Ejecutado</option>
-          <option value="COMPROMETIDO">Comprometido</option>
-          <option value="PENDIENTE">Pendiente</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Fuente de financiación</label>
-        <select id="gastoFuente">
-          <option value="Marketing Budget">Marketing Budget</option>
-          <option value="Fondo distribuidor 1%">Fondo distribuidor 1%</option>
-          <option value="Mixto">Mixto</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>¿Impacta fondo 1%?</label>
-        <select id="gastoImpactaFondo">
-          <option value="NO">No</option>
-          <option value="SI">Sí</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Soporte</label>
-        <input
-          type="text"
-          id="gastoSoporte"
-          placeholder="Factura, cotización, enlace, etc."
-        >
-      </div>
-
-    </div>
-
-    <div class="form-group" style="margin-top:16px;">
-      <label>Observaciones</label>
-      <textarea
-        id="gastoObservaciones"
-        rows="3"
-        placeholder="Observaciones adicionales"
-      ></textarea>
-    </div>
-
-    <div style="display:flex;justify-content:flex-end;margin-top:20px;">
-      <button
-        type="button"
-        class="btn btn-primary"
-        onclick="saveGasto()"
-      >
-        Guardar gasto
-      </button>
-    </div>
-
-  </div>
-
-</div>
       </section>
 
 
@@ -1946,7 +1801,349 @@ tr:last-child td{
   </div>
 
 </div>
+<!-- ============================================================
+     MODAL GASTO
+============================================================ -->
 
+<div class="modal-bg" id="gastoModal">
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <div>
+        <div class="modal-title">Nuevo gasto</div>
+
+        <div class="page-subtitle">
+          Registra una inversión en Marketing 360
+        </div>
+      </div>
+
+      <button
+        class="close"
+        onclick="closeModal('gastoModal')"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="modal-body">
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>Fecha</label>
+
+          <input
+            type="date"
+            id="gastoFecha"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>País</label>
+
+          <select id="gastoPais">
+
+            <option value="">
+              Seleccionar país
+            </option>
+
+            <option value="Colombia">
+              Colombia
+            </option>
+
+            <option value="Guatemala">
+              Guatemala
+            </option>
+
+            <option value="Costa Rica">
+              Costa Rica
+            </option>
+
+            <option value="Nicaragua">
+              Nicaragua
+            </option>
+
+            <option value="Panamá">
+              Panamá
+            </option>
+
+            <option value="República Dominicana">
+              República Dominicana
+            </option>
+
+            <option value="Honduras">
+              Honduras
+            </option>
+
+            <option value="El Salvador">
+              El Salvador
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Rubro</label>
+
+          <select id="gastoRubro">
+
+            <option value="">
+              Seleccionar rubro
+            </option>
+
+            <option value="Pauta digital y branding">
+              Pauta digital y branding
+            </option>
+
+            <option value="Contenido y fotografía">
+              Contenido y fotografía
+            </option>
+
+            <option value="Adhesiones institucionales">
+              Adhesiones institucionales
+            </option>
+
+            <option value="Ferias y eventos">
+              Ferias y eventos
+            </option>
+
+            <option value="Material POP">
+              Material POP
+            </option>
+
+            <option value="Brandeos">
+              Brandeos
+            </option>
+
+            <option value="Merchandising y exhibiciones">
+              Merchandising y exhibiciones
+            </option>
+
+            <option value="Publicidad tradicional / PR">
+              Publicidad tradicional / PR
+            </option>
+
+            <option value="Herramientas comerciales">
+              Herramientas comerciales
+            </option>
+
+            <option value="Trade Marketing">
+              Trade Marketing
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Actividad</label>
+
+          <select id="gastoActividad">
+
+            <option value="">
+              Seleccionar actividad
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Distribuidor</label>
+
+          <select id="gastoDistribuidor">
+
+            <option value="">
+              Seleccionar distribuidor
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Descripción</label>
+
+          <input
+            type="text"
+            id="gastoDescripcion"
+            placeholder="Describe el gasto"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Valor</label>
+
+          <input
+            type="number"
+            id="gastoValor"
+            min="0"
+            step="0.01"
+            placeholder="0"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Moneda</label>
+
+          <select id="gastoMoneda">
+
+            <option value="COP">COP</option>
+            <option value="GTQ">GTQ</option>
+            <option value="CRC">CRC</option>
+            <option value="NIO">NIO</option>
+            <option value="DOP">DOP</option>
+            <option value="PAB">PAB</option>
+            <option value="HNL">HNL</option>
+            <option value="USD">USD</option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Estado</label>
+
+          <select id="gastoEstado">
+
+            <option value="EJECUTADO">
+              Ejecutado
+            </option>
+
+            <option value="COMPROMETIDO">
+              Comprometido
+            </option>
+
+            <option value="PENDIENTE">
+              Pendiente
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Fuente de financiación</label>
+
+          <select id="gastoFuente">
+
+            <option value="Marketing Budget">
+              Marketing Budget
+            </option>
+
+            <option value="Fondo distribuidor 1%">
+              Fondo distribuidor 1%
+            </option>
+
+            <option value="Mixto">
+              Mixto
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>¿Impacta fondo 1%?</label>
+
+          <select id="gastoImpactaFondo">
+
+            <option value="NO">
+              No
+            </option>
+
+            <option value="SI">
+              Sí
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Soporte</label>
+
+          <input
+            type="text"
+            id="gastoSoporte"
+            placeholder="Factura, cotización, enlace, etc."
+          >
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="form-group"
+        style="margin-top:16px;"
+      >
+
+        <label>Observaciones</label>
+
+        <textarea
+          id="gastoObservaciones"
+          rows="3"
+          placeholder="Observaciones adicionales"
+        ></textarea>
+
+      </div>
+
+    </div>
+
+
+    <div class="modal-footer">
+
+      <button
+        class="btn btn-light"
+        onclick="closeModal('gastoModal')"
+      >
+        Cancelar
+      </button>
+
+      <button
+        class="btn btn-primary"
+        onclick="saveGasto()"
+      >
+        Guardar gasto
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
 
 <script>
 
