@@ -1275,7 +1275,7 @@ tr:last-child td{
   <button
     class="btn btn-primary"
     type="button"
-    onclick="openModal('gastoModal')"
+    onclick="openGastoModal()"
   >
     + Registrar gasto
   </button>
@@ -3874,7 +3874,13 @@ function openDistributorModal(){
     .classList.add("show");
 
 }
+function openGastoModal(){
 
+  document
+    .getElementById("gastoModal")
+    .classList.add("show");
+
+}
 
 function closeModal(id){
 
