@@ -1334,7 +1334,165 @@ tr:last-child td{
           </div>
 
         </div>
+        
+<!-- FORMULARIO DE GASTOS -->
+<div class="panel" style="margin-top:24px;">
 
+  <div class="panel-header">
+    <div>
+      <h3>Registrar gasto</h3>
+      <p>Registra la inversión ejecutada y su fuente de financiación.</p>
+    </div>
+  </div>
+
+  <div class="panel-body">
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Fecha</label>
+        <input type="date" id="gastoFecha">
+      </div>
+
+      <div class="form-group">
+        <label>País</label>
+        <select id="gastoPais">
+          <option value="">Seleccionar país</option>
+          <option value="Colombia">Colombia</option>
+          <option value="Guatemala">Guatemala</option>
+          <option value="Costa Rica">Costa Rica</option>
+          <option value="Nicaragua">Nicaragua</option>
+          <option value="Panamá">Panamá</option>
+          <option value="República Dominicana">República Dominicana</option>
+          <option value="Honduras">Honduras</option>
+          <option value="El Salvador">El Salvador</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Rubro</label>
+        <select id="gastoRubro">
+          <option value="">Seleccionar rubro</option>
+          <option value="Pauta digital y branding">Pauta digital y branding</option>
+          <option value="Contenido y fotografía">Contenido y fotografía</option>
+          <option value="Adhesiones institucionales">Adhesiones institucionales</option>
+          <option value="Ferias y eventos">Ferias y eventos</option>
+          <option value="Material POP">Material POP</option>
+          <option value="Brandeos">Brandeos</option>
+          <option value="Merchandising y exhibiciones">Merchandising y exhibiciones</option>
+          <option value="Publicidad tradicional / PR">Publicidad tradicional / PR</option>
+          <option value="Herramientas comerciales">Herramientas comerciales</option>
+          <option value="Trade Marketing">Trade Marketing</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Actividad</label>
+        <select id="gastoActividad">
+          <option value="">Seleccionar actividad</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Distribuidor</label>
+        <select id="gastoDistribuidor">
+          <option value="">Seleccionar distribuidor</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Descripción</label>
+        <input
+          type="text"
+          id="gastoDescripcion"
+          placeholder="Describe el gasto"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Valor</label>
+        <input
+          type="number"
+          id="gastoValor"
+          min="0"
+          step="0.01"
+          placeholder="0"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Moneda</label>
+        <select id="gastoMoneda">
+          <option value="COP">COP</option>
+          <option value="GTQ">GTQ</option>
+          <option value="CRC">CRC</option>
+          <option value="NIO">NIO</option>
+          <option value="DOP">DOP</option>
+          <option value="PAB">PAB</option>
+          <option value="HNL">HNL</option>
+          <option value="USD">USD</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Estado</label>
+        <select id="gastoEstado">
+          <option value="EJECUTADO">Ejecutado</option>
+          <option value="COMPROMETIDO">Comprometido</option>
+          <option value="PENDIENTE">Pendiente</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Fuente de financiación</label>
+        <select id="gastoFuente">
+          <option value="Marketing Budget">Marketing Budget</option>
+          <option value="Fondo distribuidor 1%">Fondo distribuidor 1%</option>
+          <option value="Mixto">Mixto</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>¿Impacta fondo 1%?</label>
+        <select id="gastoImpactaFondo">
+          <option value="NO">No</option>
+          <option value="SI">Sí</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Soporte</label>
+        <input
+          type="text"
+          id="gastoSoporte"
+          placeholder="Factura, cotización, enlace, etc."
+        >
+      </div>
+
+    </div>
+
+    <div class="form-group" style="margin-top:16px;">
+      <label>Observaciones</label>
+      <textarea
+        id="gastoObservaciones"
+        rows="3"
+        placeholder="Observaciones adicionales"
+      ></textarea>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:20px;">
+      <button
+        type="button"
+        class="btn btn-primary"
+        onclick="saveGasto()"
+      >
+        Guardar gasto
+      </button>
+    </div>
+
+  </div>
+
+</div>
       </section>
 
 
@@ -3678,6 +3836,96 @@ async function saveActivity(){
 
   }
 
+}
+async function saveGasto(){
+
+  const payload = {
+    action:"crear_gasto",
+
+    data:{
+      fecha:
+        document.getElementById("gastoFecha").value,
+
+      pais:
+        document.getElementById("gastoPais").value,
+
+      rubro:
+        document.getElementById("gastoRubro").value,
+
+      idActividad:
+        document.getElementById("gastoActividad").value,
+
+      actividad:
+        document.getElementById("gastoActividad").selectedOptions[0]?.text || "",
+
+      idDistribuidor:
+        document.getElementById("gastoDistribuidor").value,
+
+      distribuidor:
+        document.getElementById("gastoDistribuidor").selectedOptions[0]?.text || "",
+
+      descripcion:
+        document.getElementById("gastoDescripcion").value,
+
+      valor:
+        Number(document.getElementById("gastoValor").value) || 0,
+
+      moneda:
+        document.getElementById("gastoMoneda").value,
+
+      estado:
+        document.getElementById("gastoEstado").value,
+
+      fuenteFinanciacion:
+        document.getElementById("gastoFuente").value,
+
+      impactaFondo:
+        document.getElementById("gastoImpactaFondo").value,
+
+      soporte:
+        document.getElementById("gastoSoporte").value,
+
+      observaciones:
+        document.getElementById("gastoObservaciones").value
+    }
+  };
+
+  try{
+
+    const response =
+      await fetch(API_URL,{
+        method:"POST",
+        headers:{
+          "Content-Type":"text/plain;charset=utf-8"
+        },
+        body:JSON.stringify(payload)
+      });
+
+    const result =
+      await response.json();
+
+    if(result.ok === false){
+      throw new Error(
+        result.error ||
+        "No se pudo guardar el gasto."
+      );
+    }
+
+    alert("Gasto guardado correctamente.");
+
+    closeModal("gastoModal");
+
+    await loadData();
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "No se pudo guardar el gasto. " +
+      error.message
+    );
+  }
 }
 
 
