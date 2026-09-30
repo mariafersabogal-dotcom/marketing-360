@@ -3044,78 +3044,145 @@ function renderCalendar(){
   const calendar =
     rows("CALENDARIO");
 
-
   const activities =
     rows("ACTIVIDADES");
 
-
-  let source =
+  const source =
     calendar.length
       ? calendar
       : activities;
 
+  const grid =
+    document.getElementById("calendarGrid");
 
-  const tbody =
-    document.getElementById("calendarTable");
+  const title =
+    document.getElementById("calendarMonthTitle");
 
-
-  if(!source.length){
-
-    tbody.innerHTML =
-      `<tr><td colspan="6">
-        <div class="empty">No hay actividades programadas.</div>
-      </td></tr>`;
-
+  if(!grid || !title){
     return;
+  }
+
+  if(!window.calendarCurrentDate){
+    window.calendarCurrentDate = new Date();
+  }
+
+  const current =
+    window.calendarCurrentDate;
+
+  const year =
+    current.getFullYear();
+
+  const month =
+    current.getMonth();
+
+  const monthNames = [
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre"
+  ];
+
+  title.textContent =
+    monthNames[month] + " " + year;
+
+  const firstDay =
+    new Date(year, month, 1);
+
+  const lastDay =
+    new Date(year, month + 1, 0);
+
+  let startDay =
+    firstDay.getDay();
+
+  startDay =
+    startDay === 0 ? 6 : startDay - 1;
+
+  const totalDays =
+    lastDay.getDate();
+
+  let html = "";
+
+  for(let i = 0; i < startDay; i++){
+
+    html += `
+      <div style="
+        min-height:110px;
+        background:#f5f6f8;
+        border:1px solid #e5e7eb;
+        border-radius:10px;
+      "></div>
+    `;
 
   }
 
+  for(let day = 1; day <= totalDays; day++){
 
-  tbody.innerHTML =
-    source.map(r=>`
+    const dateKey =
+      year + "-" +
+      String(month + 1).padStart(2,"0") + "-" +
+      String(day).padStart(2,"0");
 
-      <tr>
+    const dayActivities =
+      source.filter(r => {
 
-        <td>
-          ${esc(
-            r["Fecha"] ||
-            r["Fecha actividad"] ||
-            ""
-          )}
-        </td>
+        const fecha =
+          r["Fecha"] ||
+          r["Fecha actividad"] ||
+          "";
 
-        <td>
-          <strong>
-            ${esc(
-              r["Título"] ||
-              r["Nombre"] ||
-              ""
-            )}
-          </strong>
-        </td>
+        return String(fecha).startsWith(dateKey);
 
-        <td>
-          ${esc(r["Tipo"] || "")}
-        </td>
+      });
 
-        <td>
-          ${esc(r["País"] || "")}
-        </td>
+    html += `
+      <div style="
+        min-height:110px;
+        background:#fff;
+        border:1px solid #e5e7eb;
+        border-radius:10px;
+        padding:10px;
+      ">
 
-        <td>
-          ${esc(
-            r["Distribuidor"] ||
-            ""
-          )}
-        </td>
+        <div style="
+          font-weight:700;
+          margin-bottom:8px;
+        ">
+          ${day}
+        </div>
 
-        <td>
-          ${esc(r["Responsable"] || "María Fernanda")}
-        </td>
+        ${
+          dayActivities.map(r => `
+            <div style="
+              background:#E5004E;
+              color:#fff;
+              border-radius:7px;
+              padding:5px 7px;
+              margin-bottom:5px;
+              font-size:12px;
+            ">
+              ${esc(
+                r["Título"] ||
+                r["Nombre"] ||
+                "Actividad"
+              )}
+            </div>
+          `).join("")
+        }
 
-      </tr>
+      </div>
+    `;
 
-    `).join("");
+  }
+
+  grid.innerHTML = html;
 
 }
 
