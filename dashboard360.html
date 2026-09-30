@@ -4115,7 +4115,21 @@ async function saveGasto(){
     }
 
     alert("Gasto guardado correctamente.");
-
+    
+document.getElementById("gastoFecha").value = "";
+document.getElementById("gastoPais").value = "";
+document.getElementById("gastoRubro").value = "";
+document.getElementById("gastoActividad").value = "";
+document.getElementById("gastoDistribuidor").value = "";
+document.getElementById("gastoDescripcion").value = "";
+document.getElementById("gastoValor").value = "";
+document.getElementById("gastoMoneda").value = "COP";
+document.getElementById("gastoEstado").value = "EJECUTADO";
+document.getElementById("gastoFuente").value = "Marketing Budget";
+document.getElementById("gastoImpactaFondo").value = "NO";
+document.getElementById("gastoSoporte").value = "";
+document.getElementById("gastoObservaciones").value = "";
+    
     closeModal("gastoModal");
 
     await loadData();
