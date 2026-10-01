@@ -2462,7 +2462,27 @@ function rows(name){
 
   const value = DATA[name];
 
-  return Array.isArray(value) ? value : [];
+  if(!Array.isArray(value) || value.length === 0){
+    return [];
+  }
+
+  const headers = value[0];
+
+  if(!Array.isArray(headers)){
+    return value;
+  }
+
+  return value.slice(1).map(row => {
+
+    const obj = {};
+
+    headers.forEach((header,index) => {
+      obj[header] = row[index];
+    });
+
+    return obj;
+
+  });
 
 }
 
