@@ -3363,23 +3363,53 @@ function renderCalendar(){
 
       let fechaDate = null;
 
-      /*
-       * Formato YYYY-MM-DD
-       */
-      if(/^\d{4}-\d{2}-\d{2}/.test(fecha)){
+     /*
+ * Interpretar fecha
+ */
+if(/^\d{4}-\d{2}-\d{2}/.test(fecha)){
 
-        const partes =
-          fecha.substring(0,10).split("-");
+  const partes =
+    fecha.substring(0,10).split("-");
 
-        fechaDate =
-          new Date(
-            Number(partes[0]),
-            Number(partes[1]) - 1,
-            Number(partes[2])
-          );
+  fechaDate =
+    new Date(
+      Number(partes[0]),
+      Number(partes[1]) - 1,
+      Number(partes[2])
+    );
 
-      }
+}
 
+/*
+ * Formato DD/MM/YYYY
+ */
+else if(/^\d{2}\/\d{2}\/\d{4}/.test(fecha)){
+
+  const partes =
+    fecha.substring(0,10).split("/");
+
+  fechaDate =
+    new Date(
+      Number(partes[2]),
+      Number(partes[1]) - 1,
+      Number(partes[0])
+    );
+
+}
+
+/*
+ * Otros formatos de fecha
+ */
+else{
+
+  const fechaTemporal =
+    new Date(fecha);
+
+  if(!isNaN(fechaTemporal.getTime())){
+    fechaDate = fechaTemporal;
+  }
+
+}
       /*
        * Formato DD/MM/YYYY
        */
