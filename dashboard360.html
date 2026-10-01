@@ -1076,7 +1076,93 @@ tr:last-child td{
   </div>
 
   <div class="panel-body">
+<div
+  style="
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-bottom:20px;
+  ">
 
+  <div>
+    <label
+      style="
+        display:block;
+        font-size:12px;
+        font-weight:600;
+        margin-bottom:6px;
+      ">
+      País
+    </label>
+
+    <select
+      id="calendarCountryFilter"
+      class="input">
+      <option value="">Todos los países</option>
+      <option value="Colombia">Colombia</option>
+      <option value="Guatemala">Guatemala</option>
+      <option value="Costa Rica">Costa Rica</option>
+      <option value="Nicaragua">Nicaragua</option>
+      <option value="República Dominicana">República Dominicana</option>
+      <option value="Panamá">Panamá</option>
+      <option value="Honduras">Honduras</option>
+      <option value="El Salvador">El Salvador</option>
+    </select>
+  </div>
+
+
+  <div>
+    <label
+      style="
+        display:block;
+        font-size:12px;
+        font-weight:600;
+        margin-bottom:6px;
+      ">
+      Año
+    </label>
+
+    <select
+      id="calendarYearFilter"
+      class="input">
+      <option value="">Todos los años</option>
+      <option value="2026">2026</option>
+      <option value="2027">2027</option>
+    </select>
+  </div>
+
+
+  <div>
+    <label
+      style="
+        display:block;
+        font-size:12px;
+        font-weight:600;
+        margin-bottom:6px;
+      ">
+      Mes
+    </label>
+
+    <select
+      id="calendarMonthFilter"
+      class="input">
+      <option value="">Todos los meses</option>
+      <option value="0">Enero</option>
+      <option value="1">Febrero</option>
+      <option value="2">Marzo</option>
+      <option value="3">Abril</option>
+      <option value="4">Mayo</option>
+      <option value="5">Junio</option>
+      <option value="6">Julio</option>
+      <option value="7">Agosto</option>
+      <option value="8">Septiembre</option>
+      <option value="9">Octubre</option>
+      <option value="10">Noviembre</option>
+      <option value="11">Diciembre</option>
+    </select>
+  </div>
+
+</div>
     <div
       id="calendarMonthTitle"
       style="text-align:center;font-size:20px;font-weight:700;margin-bottom:18px;">
