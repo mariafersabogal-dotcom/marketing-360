@@ -3124,7 +3124,98 @@ function renderActivities(){
 /* =========================================================
    CALENDARIO
 ========================================================= */
+function calendarPreviousMonth(){
 
+  if(!window.calendarCurrentDate){
+    window.calendarCurrentDate = new Date();
+  }
+
+  window.calendarCurrentDate =
+    new Date(
+      window.calendarCurrentDate.getFullYear(),
+      window.calendarCurrentDate.getMonth() - 1,
+      1
+    );
+
+  const monthFilter =
+    document.getElementById("calendarMonthFilter");
+
+  if(monthFilter){
+    monthFilter.value =
+      String(window.calendarCurrentDate.getMonth());
+  }
+
+  const yearFilter =
+    document.getElementById("calendarYearFilter");
+
+  if(yearFilter){
+    yearFilter.value =
+      String(window.calendarCurrentDate.getFullYear());
+  }
+
+  renderCalendar();
+
+}
+
+
+function calendarNextMonth(){
+
+  if(!window.calendarCurrentDate){
+    window.calendarCurrentDate = new Date();
+  }
+
+  window.calendarCurrentDate =
+    new Date(
+      window.calendarCurrentDate.getFullYear(),
+      window.calendarCurrentDate.getMonth() + 1,
+      1
+    );
+
+  const monthFilter =
+    document.getElementById("calendarMonthFilter");
+
+  if(monthFilter){
+    monthFilter.value =
+      String(window.calendarCurrentDate.getMonth());
+  }
+
+  const yearFilter =
+    document.getElementById("calendarYearFilter");
+
+  if(yearFilter){
+    yearFilter.value =
+      String(window.calendarCurrentDate.getFullYear());
+  }
+
+  renderCalendar();
+
+}
+
+
+function calendarToday(){
+
+  window.calendarCurrentDate =
+    new Date();
+
+  const monthFilter =
+    document.getElementById("calendarMonthFilter");
+
+  if(monthFilter){
+    monthFilter.value =
+      String(window.calendarCurrentDate.getMonth());
+  }
+
+  const yearFilter =
+    document.getElementById("calendarYearFilter");
+
+  if(yearFilter){
+    yearFilter.value =
+      String(window.calendarCurrentDate.getFullYear());
+  }
+
+  renderCalendar();
+
+}
 function renderCalendar(){
 
   const calendar =
@@ -3144,10 +3235,37 @@ function renderCalendar(){
   const title =
     document.getElementById("calendarMonthTitle");
 
+  const countryFilter =
+    document.getElementById("calendarCountryFilter");
+
+  const yearFilter =
+    document.getElementById("calendarYearFilter");
+
+  const monthFilter =
+    document.getElementById("calendarMonthFilter");
+
   if(!grid || !title){
     return;
   }
 
+  /*
+   * Conectar filtros
+   */
+  if(countryFilter){
+    countryFilter.onchange = renderCalendar;
+  }
+
+  if(yearFilter){
+    yearFilter.onchange = renderCalendar;
+  }
+
+  if(monthFilter){
+    monthFilter.onchange = renderCalendar;
+  }
+
+  /*
+   * Fecha actual del calendario
+   */
   if(!window.calendarCurrentDate){
     window.calendarCurrentDate = new Date();
   }
@@ -3155,11 +3273,27 @@ function renderCalendar(){
   const current =
     window.calendarCurrentDate;
 
-  const year =
+  let year =
     current.getFullYear();
 
-  const month =
+  let month =
     current.getMonth();
+
+  /*
+   * Aplicar filtro de año
+   */
+  if(yearFilter && yearFilter.value){
+    year =
+      Number(yearFilter.value);
+  }
+
+  /*
+   * Aplicar filtro de mes
+   */
+  if(monthFilter && monthFilter.value !== ""){
+    month =
+      Number(monthFilter.value);
+  }
 
   const monthNames = [
     "Enero",
@@ -3179,23 +3313,153 @@ function renderCalendar(){
   title.textContent =
     monthNames[month] + " " + year;
 
+  /*
+   * Filtro de país
+   */
+  const selectedCountry =
+    countryFilter
+      ? countryFilter.value
+      : "";
+
+  /*
+   * Filtro de año y mes
+   */
+  const filteredSource =
+    source.filter(r => {
+
+      const pais =
+        String(
+          r["País"] ||
+          r["Pais"] ||
+          ""
+        ).trim();
+
+      const fecha =
+        String(
+          r["Fecha"] ||
+          r["Fecha actividad"] ||
+          ""
+        ).trim();
+
+      let fechaDate = null;
+
+      /*
+       * Formato YYYY-MM-DD
+       */
+      if(/^\d{4}-\d{2}-\d{2}/.test(fecha)){
+
+        const partes =
+          fecha.substring(0,10).split("-");
+
+        fechaDate =
+          new Date(
+            Number(partes[0]),
+            Number(partes[1]) - 1,
+            Number(partes[2])
+          );
+
+      }
+
+      /*
+       * Formato DD/MM/YYYY
+       */
+      else if(/^\d{2}\/\d{2}\/\d{4}/.test(fecha)){
+
+        const partes =
+          fecha.substring(0,10).split("/");
+
+        fechaDate =
+          new Date(
+            Number(partes[2]),
+            Number(partes[1]) - 1,
+            Number(partes[0])
+          );
+
+      }
+
+      /*
+       * Si no se puede interpretar la fecha,
+       * no mostrar la actividad.
+       */
+      if(!fechaDate){
+        return false;
+      }
+
+      const activityYear =
+        fechaDate.getFullYear();
+
+      const activityMonth =
+        fechaDate.getMonth();
+
+      /*
+       * País
+       */
+      if(
+        selectedCountry &&
+        pais !== selectedCountry
+      ){
+        return false;
+      }
+
+      /*
+       * Año
+       */
+      if(
+        yearFilter &&
+        yearFilter.value &&
+        activityYear !== Number(yearFilter.value)
+      ){
+        return false;
+      }
+
+      /*
+       * Mes
+       */
+      if(
+        monthFilter &&
+        monthFilter.value !== "" &&
+        activityMonth !== Number(monthFilter.value)
+      ){
+        return false;
+      }
+
+      return true;
+
+    });
+
+
+  /*
+   * Primer día del mes
+   */
   const firstDay =
     new Date(year, month, 1);
 
+  /*
+   * Último día del mes
+   */
   const lastDay =
     new Date(year, month + 1, 0);
 
+  /*
+   * Lunes = 0
+   * Domingo = 6
+   */
   let startDay =
     firstDay.getDay();
 
   startDay =
-    startDay === 0 ? 6 : startDay - 1;
+    startDay === 0
+      ? 6
+      : startDay - 1;
 
   const totalDays =
     lastDay.getDate();
 
   let html = "";
 
+  /*
+   * Espacios antes del día 1
+   */
   for(let i = 0; i < startDay; i++){
 
     html += `
@@ -3209,24 +3473,74 @@ function renderCalendar(){
 
   }
 
-  for(let day = 1; day <= totalDays; day++){
 
-    const dateKey =
-      year + "-" +
-      String(month + 1).padStart(2,"0") + "-" +
-      String(day).padStart(2,"0");
+  /*
+   * Días del mes
+   */
+  for(
+    let day = 1;
+    day <= totalDays;
+    day++
+  ){
 
     const dayActivities =
-      source.filter(r => {
+      filteredSource.filter(r => {
 
         const fecha =
-          r["Fecha"] ||
-          r["Fecha actividad"] ||
-          "";
+          String(
+            r["Fecha"] ||
+            r["Fecha actividad"] ||
+            ""
+          ).trim();
 
-        return String(fecha).startsWith(dateKey);
+        let fechaDate = null;
+
+        /*
+         * YYYY-MM-DD
+         */
+        if(/^\d{4}-\d{2}-\d{2}/.test(fecha)){
+
+          const partes =
+            fecha.substring(0,10).split("-");
+
+          fechaDate =
+            new Date(
+              Number(partes[0]),
+              Number(partes[1]) - 1,
+              Number(partes[2])
+            );
+
+        }
+
+        /*
+         * DD/MM/YYYY
+         */
+        else if(/^\d{2}\/\d{2}\/\d{4}/.test(fecha)){
+
+          const partes =
+            fecha.substring(0,10).split("/");
+
+          fechaDate =
+            new Date(
+              Number(partes[2]),
+              Number(partes[1]) - 1,
+              Number(partes[0])
+            );
+
+        }
+
+        if(!fechaDate){
+          return false;
+        }
+
+        return (
+          fechaDate.getFullYear() === year &&
+          fechaDate.getMonth() === month &&
+          fechaDate.getDate() === day
+        );
 
       });
+
 
     html += `
       <div style="
@@ -3245,22 +3559,25 @@ function renderCalendar(){
         </div>
 
         ${
-          dayActivities.map(r => `
-            <div style="
-              background:#E5004E;
-              color:#fff;
-              border-radius:7px;
-              padding:5px 7px;
-              margin-bottom:5px;
-              font-size:12px;
-            ">
-              ${esc(
-                r["Título"] ||
-                r["Nombre"] ||
-                "Actividad"
-              )}
-            </div>
-          `).join("")
+          dayActivities.length
+            ? dayActivities.map(r => `
+                <div style="
+                  background:#E5004E;
+                  color:#fff;
+                  border-radius:7px;
+                  padding:5px 7px;
+                  margin-bottom:5px;
+                  font-size:12px;
+                ">
+                  ${esc(
+                    r["Título"] ||
+                    r["Nombre"] ||
+                    r["Actividad"] ||
+                    "Actividad"
+                  )}
+                </div>
+              `).join("")
+            : ""
         }
 
       </div>
