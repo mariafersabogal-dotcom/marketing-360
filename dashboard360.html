@@ -3410,22 +3410,6 @@ else{
   }
 
 }
-      /*
-       * Formato DD/MM/YYYY
-       */
-      else if(/^\d{2}\/\d{2}\/\d{4}/.test(fecha)){
-
-        const partes =
-          fecha.substring(0,10).split("/");
-
-        fechaDate =
-          new Date(
-            Number(partes[2]),
-            Number(partes[1]) - 1,
-            Number(partes[0])
-          );
-
-      }
 
       /*
        * Si no se puede interpretar la fecha,
