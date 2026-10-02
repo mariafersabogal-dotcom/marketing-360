@@ -1883,6 +1883,61 @@ tr:last-child td{
 
       </div>
 
+      <div class="form-group form-full">
+
+    <label>Resultados de la actividad</label>
+
+    <div style="
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:12px;
+        margin-top:10px;
+    ">
+
+        <div class="activity-kpi">
+            <small>Leads</small>
+            <strong id="activityDetailLeads">0</strong>
+        </div>
+
+        <div class="activity-kpi">
+            <small>Contactos</small>
+            <strong id="activityDetailContacts">0</strong>
+        </div>
+
+        <div class="activity-kpi">
+            <small>Inscritos</small>
+            <strong id="activityDetailInscritos">0</strong>
+        </div>
+
+        <div class="activity-kpi">
+            <small>Asistentes</small>
+            <strong id="activityDetailAsistentes">0</strong>
+        </div>
+
+        <div class="activity-kpi">
+            <small>Oportunidades</small>
+            <strong id="activityDetailOportunidades">0</strong>
+        </div>
+
+        <div class="activity-kpi">
+            <small>Ventas</small>
+            <strong id="activityDetailVentas">0</strong>
+        </div>
+
+        <div class="activity-kpi">
+            <small>ROI</small>
+            <strong id="activityDetailROI">Pendiente</strong>
+        </div>
+
+        <div class="activity-kpi">
+            <small>Progreso</small>
+            <strong id="activityDetailProgreso">0%</strong>
+        </div>
+
+    </div>
+
+</div>
+
     </div>
 
   </div>
@@ -4532,7 +4587,32 @@ function openActivityDetail(a){
 
   document.getElementById("activityDetailDescription").textContent =
     a["Descripción"] || "—";
+document.getElementById("activityDetailLeads").textContent =
+  a["Leads"] || 0;
 
+document.getElementById("activityDetailContacts").textContent =
+  a["Contactos"] || 0;
+
+document.getElementById("activityDetailInscritos").textContent =
+  a["Inscritos"] || 0;
+
+document.getElementById("activityDetailAsistentes").textContent =
+  a["Asistentes"] || 0;
+
+document.getElementById("activityDetailOportunidades").textContent =
+  a["Oportunidades"] || 0;
+
+document.getElementById("activityDetailVentas").textContent =
+  a["Ventas"] || 0;
+
+document.getElementById("activityDetailROI").textContent =
+  a["ROI"] === "" || a["ROI"] == null
+    ? "Pendiente"
+    : a["ROI"] + "%";
+
+document.getElementById("activityDetailProgreso").textContent =
+  a["Progreso %"] || 0;
+  
   document
     .getElementById("activityDetailModal")
     .classList.add("show");
