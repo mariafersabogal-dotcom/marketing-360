@@ -4498,7 +4498,46 @@ function openActivityModal(){
     .classList.add("show");
 
 }
+function openActivityDetail(a){
 
+  document.getElementById("activityDetailTitle").textContent =
+    a["Nombre"] || "Detalle de actividad";
+
+  document.getElementById("activityDetailType").textContent =
+    a["Tipo"] || "—";
+
+  document.getElementById("activityDetailCountry").textContent =
+    a["País"] || "—";
+
+  document.getElementById("activityDetailStatus").textContent =
+    a["Estado"] || "—";
+
+  document.getElementById("activityDetailDistributor").textContent =
+    a["Distribuidor"] || "No aplica";
+
+  document.getElementById("activityDetailStart").textContent =
+    a["Fecha inicio"] || "—";
+
+  document.getElementById("activityDetailDate").textContent =
+    a["Fecha actividad"] || "—";
+
+  document.getElementById("activityDetailEnd").textContent =
+    a["Fecha cierre"] || "—";
+
+  document.getElementById("activityDetailBudget").textContent =
+    a["Presupuesto estimado"] || "—";
+
+  document.getElementById("activityDetailObjective").textContent =
+    a["Objetivo"] || "—";
+
+  document.getElementById("activityDetailDescription").textContent =
+    a["Descripción"] || "—";
+
+  document
+    .getElementById("activityDetailModal")
+    .classList.add("show");
+
+}
 
 function openDistributorModal(){
 
