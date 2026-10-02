@@ -3205,7 +3205,7 @@ function renderActivities(){
 
     container.innerHTML += `
 
-      <div class="activity-mini">
+      <div class="activity-mini" onclick='openActivityDetail(${JSON.stringify(a)})' style="cursor:pointer;">
 
         <strong>${esc(a["Nombre"])}</strong>
 
