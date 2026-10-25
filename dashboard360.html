@@ -2519,31 +2519,50 @@ async function loadData(){
 
   setConnection(false,"Conectando...");
 
+  // Evita que el tablero se quede indefinidamente en “Conectando…”.
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
+
   try{
 
-    const response =
-      await fetch(API_URL + "?t=" + Date.now());
+    const response = await fetch(API_URL + "?t=" + Date.now(), {
+      method: "GET",
+      cache: "no-store",
+      signal: controller.signal
+    });
 
     if(!response.ok){
       throw new Error("Error HTTP " + response.status);
     }
 
-    DATA = await response.json();
+    const data = await response.json();
+    if(!data || typeof data !== "object"){
+      throw new Error("La respuesta de Google Sheets no tiene el formato esperado.");
+    }
 
+    DATA = data;
     setConnection(true,"Conectado a Google Sheets");
-
     renderAll();
 
   }catch(error){
 
-    console.error(error);
-
-    setConnection(false,"Sin conexión");
-
+    console.error("Error al conectar con Google Sheets:", error);
     DATA = {};
 
-    renderAll();
+    if(error && error.name === "AbortError"){
+      setConnection(false,"Tiempo de espera agotado");
+    }else{
+      setConnection(false,"Sin conexión");
+    }
 
+    try{
+      renderAll();
+    }catch(renderError){
+      console.error("Error al dibujar el tablero:", renderError);
+    }
+
+  }finally{
+    clearTimeout(timeoutId);
   }
 
 }
