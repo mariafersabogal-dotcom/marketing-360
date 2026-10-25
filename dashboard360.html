@@ -3400,6 +3400,27 @@ function calendarToday(){
   renderCalendar();
 
 }
+function parseCalendarDate(value){
+  if(value instanceof Date && !isNaN(value.getTime())){
+    return new Date(value.getFullYear(), value.getMonth(), value.getDate());
+  }
+  const text = String(value || "").trim();
+  if(!text) return null;
+  let match = text.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(match) return new Date(Number(match[1]), Number(match[2])-1, Number(match[3]));
+  match = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if(match) return new Date(Number(match[3]), Number(match[2])-1, Number(match[1]));
+  const parsed = new Date(text);
+  return isNaN(parsed.getTime()) ? null : new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate());
+}
+function calendarActivityRange(row){
+  const fallback = parseCalendarDate(row["Fecha"] || row["Fecha actividad"]);
+  const start = parseCalendarDate(row["Fecha inicio"]) || fallback;
+  const end = parseCalendarDate(row["Fecha cierre"]) || start || fallback;
+  if(!start) return null;
+  return {start, end: end && end >= start ? end : start};
+}
+
 function renderCalendar(){
 
   const calendar =
@@ -3510,121 +3531,23 @@ function renderCalendar(){
    */
   const filteredSource =
     source.filter(r => {
+      const pais = String(r["País"] || r["Pais"] || "").trim();
+      const range = calendarActivityRange(r);
+      if(!range) return false;
+      if(selectedCountry && pais !== selectedCountry) return false;
 
-      const pais =
-        String(
-          r["País"] ||
-          r["Pais"] ||
-          ""
-        ).trim();
+      // Mostrar actividades cuyo intervalo se cruza con el año/mes filtrado.
+      const filterStart = new Date(year, month, 1);
+      const filterEnd = new Date(year, month + 1, 0);
+      if(range.end < filterStart || range.start > filterEnd) return false;
 
-      const fecha =
-        String(
-          r["Fecha"] ||
-          r["Fecha actividad"] ||
-          ""
-        ).trim();
-
-      let fechaDate = null;
-
-     /*
- * Interpretar fecha
- */
-if(/^\d{4}-\d{2}-\d{2}/.test(fecha)){
-
-  const partes =
-    fecha.substring(0,10).split("-");
-
-  fechaDate =
-    new Date(
-      Number(partes[0]),
-      Number(partes[1]) - 1,
-      Number(partes[2])
-    );
-
-}
-
-/*
- * Formato DD/MM/YYYY
- */
-else if(/^\d{2}\/\d{2}\/\d{4}/.test(fecha)){
-
-  const partes =
-    fecha.substring(0,10).split("/");
-
-  fechaDate =
-    new Date(
-      Number(partes[2]),
-      Number(partes[1]) - 1,
-      Number(partes[0])
-    );
-
-}
-
-/*
- * Otros formatos de fecha
- */
-else{
-
-  const fechaTemporal =
-    new Date(fecha);
-
-  if(!isNaN(fechaTemporal.getTime())){
-    fechaDate = fechaTemporal;
-  }
-
-}
-
-      /*
-       * Si no se puede interpretar la fecha,
-       * no mostrar la actividad.
-       */
-      if(!fechaDate){
-        return false;
-      }
-
-      const activityYear =
-        fechaDate.getFullYear();
-
-      const activityMonth =
-        fechaDate.getMonth();
-
-      /*
-       * País
-       */
-      if(
-        selectedCountry &&
-        pais !== selectedCountry
-      ){
-        return false;
-      }
-
-      /*
-       * Año
-       */
-      if(
-        yearFilter &&
-        yearFilter.value &&
-        activityYear !== Number(yearFilter.value)
-      ){
-        return false;
-      }
-
-      /*
-       * Mes
-       */
-      if(
-        monthFilter &&
-        monthFilter.value !== "" &&
-        activityMonth !== Number(monthFilter.value)
-      ){
-        return false;
-      }
+      if(yearFilter && yearFilter.value && (
+        range.start.getFullYear() > Number(yearFilter.value) ||
+        range.end.getFullYear() < Number(yearFilter.value)
+      )) return false;
 
       return true;
-
     });
-
 
   /*
    * Primer día del mes
@@ -3681,62 +3604,11 @@ else{
     day++
   ){
 
+    const dayDate = new Date(year, month, day);
     const dayActivities =
       filteredSource.filter(r => {
-
-        const fecha =
-          String(
-            r["Fecha"] ||
-            r["Fecha actividad"] ||
-            ""
-          ).trim();
-
-        let fechaDate = null;
-
-        /*
-         * YYYY-MM-DD
-         */
-        if(/^\d{4}-\d{2}-\d{2}/.test(fecha)){
-
-          const partes =
-            fecha.substring(0,10).split("-");
-
-          fechaDate =
-            new Date(
-              Number(partes[0]),
-              Number(partes[1]) - 1,
-              Number(partes[2])
-            );
-
-        }
-
-        /*
-         * DD/MM/YYYY
-         */
-        else if(/^\d{2}\/\d{2}\/\d{4}/.test(fecha)){
-
-          const partes =
-            fecha.substring(0,10).split("/");
-
-          fechaDate =
-            new Date(
-              Number(partes[2]),
-              Number(partes[1]) - 1,
-              Number(partes[0])
-            );
-
-        }
-
-        if(!fechaDate){
-          return false;
-        }
-
-        return (
-          fechaDate.getFullYear() === year &&
-          fechaDate.getMonth() === month &&
-          fechaDate.getDate() === day
-        );
-
+        const range = calendarActivityRange(r);
+        return range && dayDate >= range.start && dayDate <= range.end;
       });
 
 
@@ -3759,6 +3631,7 @@ else{
         ${
           dayActivities.length
             ? dayActivities.map(r => {
+                const range = calendarActivityRange(r);
                 const tipo = String(
                   r["Tipo"] ||
                   r["Tipo de actividad"] ||
@@ -3795,18 +3668,30 @@ else{
                 else if(tipo.includes("trade") || tipo.includes("distribuidor")) color = "#0F766E";
                 else if(tipo.includes("efemérides") || tipo.includes("efemerides")) color = "#0891B2";
 
+                const segmentStart = range && dayDate.getTime() === range.start.getTime();
+                const segmentEnd = range && dayDate.getTime() === range.end.getTime();
+                const isMultiDay = range && range.end.getTime() > range.start.getTime();
+                const segmentRadius = !isMultiDay ? "7px" :
+                  segmentStart ? "7px 2px 2px 7px" :
+                  segmentEnd ? "2px 7px 7px 2px" : "2px";
+                const activityName = r["Título"] || r["Nombre"] || r["Actividad"] || "Actividad";
+                const segmentLabel = segmentStart && isMultiDay ? activityName :
+                  segmentEnd && isMultiDay ? "Fin · " + activityName : activityName;
+
                 return `
-                  <div title="${esc(tipo || 'Actividad')} · ${esc(paisActividad || 'País no especificado')}" style="
+                  <div title="${esc(activityName)} · ${esc(paisActividad || 'País no especificado')}${range ? ' · ' + range.start.toLocaleDateString('es-CO') + (isMultiDay ? ' – ' + range.end.toLocaleDateString('es-CO') : '') : ''}" style="
                     position:relative;
                     background:${color};
                     color:${colorTexto};
-                    border-radius:7px;
+                    border-radius:${segmentRadius};
                     padding:5px 29px 5px 7px;
                     margin-bottom:5px;
                     font-size:12px;
                     line-height:1.35;
                     font-weight:600;
                     overflow-wrap:anywhere;
+                    min-height:20px;
+                    box-sizing:border-box;
                   ">
                     <span aria-label="${esc(paisActividad || 'País no especificado')}" title="${esc(paisActividad || 'País no especificado')}" style="
                       position:absolute;
@@ -3815,12 +3700,7 @@ else{
                       font-size:15px;
                       line-height:1;
                     ">${bandera}</span>
-                    ${esc(
-                      r["Título"] ||
-                      r["Nombre"] ||
-                      r["Actividad"] ||
-                      "Actividad"
-                    )}
+                    ${esc(segmentLabel)}
                   </div>
                 `;
               }).join("")
