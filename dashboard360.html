@@ -3755,23 +3755,46 @@ else{
 
         ${
           dayActivities.length
-            ? dayActivities.map(r => `
-                <div style="
-                  background:#E5004E;
-                  color:#fff;
-                  border-radius:7px;
-                  padding:5px 7px;
-                  margin-bottom:5px;
-                  font-size:12px;
-                ">
-                  ${esc(
-                    r["Título"] ||
-                    r["Nombre"] ||
-                    r["Actividad"] ||
-                    "Actividad"
-                  )}
-                </div>
-              `).join("")
+            ? dayActivities.map(r => {
+                const tipo = String(
+                  r["Tipo"] ||
+                  r["Tipo de actividad"] ||
+                  r["Categoría"] ||
+                  r["Categoria"] ||
+                  ""
+                ).trim().toLowerCase();
+
+                let color = "#E5004E";
+                let colorTexto = "#FFFFFF";
+
+                if(tipo.includes("lanzamiento")) color = "#7C3AED";
+                else if(tipo.includes("evento") || tipo.includes("feria")) color = "#2563EB";
+                else if(tipo.includes("webinar") || tipo.includes("capacitación") || tipo.includes("capacitacion")) color = "#D97706";
+                else if(tipo.includes("campaña") || tipo.includes("campana")) color = "#DB2777";
+                else if(tipo.includes("trade") || tipo.includes("distribuidor")) color = "#0F766E";
+                else if(tipo.includes("efemérides") || tipo.includes("efemerides")) color = "#0891B2";
+
+                return `
+                  <div title="${esc(tipo || 'Actividad')}" style="
+                    background:${color};
+                    color:${colorTexto};
+                    border-radius:7px;
+                    padding:5px 7px;
+                    margin-bottom:5px;
+                    font-size:12px;
+                    line-height:1.35;
+                    font-weight:600;
+                    overflow-wrap:anywhere;
+                  ">
+                    ${esc(
+                      r["Título"] ||
+                      r["Nombre"] ||
+                      r["Actividad"] ||
+                      "Actividad"
+                    )}
+                  </div>
+                `;
+              }).join("")
             : ""
         }
 
