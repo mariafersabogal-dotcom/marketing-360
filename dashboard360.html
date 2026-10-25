@@ -3764,6 +3764,24 @@ else{
                   ""
                 ).trim().toLowerCase();
 
+                const paisActividad = String(
+                  r["País"] || r["Pais"] || r["País del evento"] || ""
+                ).trim().toLowerCase();
+
+                const banderas = {
+                  "colombia": "🇨🇴",
+                  "guatemala": "🇬🇹",
+                  "costa rica": "🇨🇷",
+                  "nicaragua": "🇳🇮",
+                  "república dominicana": "🇩🇴",
+                  "republica dominicana": "🇩🇴",
+                  "panamá": "🇵🇦",
+                  "panama": "🇵🇦",
+                  "honduras": "🇭🇳",
+                  "el salvador": "🇸🇻"
+                };
+                const bandera = banderas[paisActividad] || "🌎";
+
                 let color = "#E5004E";
                 let colorTexto = "#FFFFFF";
 
@@ -3775,17 +3793,25 @@ else{
                 else if(tipo.includes("efemérides") || tipo.includes("efemerides")) color = "#0891B2";
 
                 return `
-                  <div title="${esc(tipo || 'Actividad')}" style="
+                  <div title="${esc(tipo || 'Actividad')} · ${esc(paisActividad || 'País no especificado')}" style="
+                    position:relative;
                     background:${color};
                     color:${colorTexto};
                     border-radius:7px;
-                    padding:5px 7px;
+                    padding:5px 29px 5px 7px;
                     margin-bottom:5px;
                     font-size:12px;
                     line-height:1.35;
                     font-weight:600;
                     overflow-wrap:anywhere;
                   ">
+                    <span aria-label="${esc(paisActividad || 'País no especificado')}" title="${esc(paisActividad || 'País no especificado')}" style="
+                      position:absolute;
+                      top:4px;
+                      right:5px;
+                      font-size:15px;
+                      line-height:1;
+                    ">${bandera}</span>
                     ${esc(
                       r["Título"] ||
                       r["Nombre"] ||
