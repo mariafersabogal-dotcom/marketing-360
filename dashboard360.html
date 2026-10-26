@@ -3400,19 +3400,50 @@ function calendarToday(){
   renderCalendar();
 
 }
+
 function parseCalendarDate(value){
   if(value instanceof Date && !isNaN(value.getTime())){
-    return new Date(value.getFullYear(), value.getMonth(), value.getDate());
+    return new Date(
+      value.getFullYear(),
+      value.getMonth(),
+      value.getDate()
+    );
   }
+
   const text = String(value || "").trim();
   if(!text) return null;
+
   let match = text.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if(match) return new Date(Number(match[1]), Number(match[2])-1, Number(match[3]));
+
+  if(match){
+    return new Date(
+      Number(match[1]),
+      Number(match[2]) - 1,
+      Number(match[3])
+    );
+  }
+
   match = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-  if(match) return new Date(Number(match[3]), Number(match[2])-1, Number(match[1]));
+
+  if(match){
+    return new Date(
+      Number(match[3]),
+      Number(match[2]) - 1,
+      Number(match[1])
+    );
+  }
+
   const parsed = new Date(text);
-  return isNaN(parsed.getTime()) ? null : new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate());
+
+  if(isNaN(parsed.getTime())) return null;
+
+  return new Date(
+    parsed.getFullYear(),
+    parsed.getMonth(),
+    parsed.getDate()
+  );
 }
+
 function calendarActivityRange(row){
   const fallback = parseCalendarDate(row["Fecha"] || row["Fecha actividad"]);
   const start = parseCalendarDate(row["Fecha inicio"]) || fallback;
